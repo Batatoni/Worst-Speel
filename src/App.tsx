@@ -16,12 +16,31 @@ function App() {
             <p className="text-left">Teste</p>
             <Input name="" type="text" />
             <Input name="" type="text" />
-            <Input name="" type="text" />
+            <Input name="" type="text" />         
           </div>
-          <div className="grid grid-cols-3 gap-x-4 gap-y-1 mt-8">
+          <div className="grid grid-cols-3 gap-4 mt-8">
+            <Input name="" type="number" />
+            <Input name="" type="number" />
+            <Input name="" type="number" />
+            </div>
+          <div className="grid grid-cols-3 gap-4 mt-8">
             <Select name="select" />
             <Select name="select" />
             <Select name="select" />
+            <Select name="select" />
+            <Select name="select" />
+            <Select name="select" />
+            <Select name="select" />
+            <Select name="select" />
+            <Select name="select" />
+          </div>
+          <div className="grid grid-cols-3 gap-4 mt-8">
+            <Input name="" type="text" />
+            <Input name="" type="text" />
+            <Input name="" type="text" />
+            <Input name="" type="number" />
+            <Input name="" type="number" />
+            <Input name="" type="number" />
           </div>
         </div>
       </div>
