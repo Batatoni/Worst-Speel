@@ -1,12 +1,16 @@
 import React, { } from 'react';
+import theme from './Theme';
 
 interface InputProps {
   name: string;
+  value?: "None" | "Trained" | "Mastered" | "Supreme";
+  className?: string;
 }
 
-const Select: React.FC<InputProps> = ({ name }) => {
+const Select: React.FC<InputProps> = ({ name, value, className }) => {
+  className = className + theme ? className : theme;
   return (
-  <select name={name} className="ring-1 ring-purple-500/50">
+  <select name={name} className={className} value={value? value : "None"}>
     <option >None</option>
     <option >Trained</option>
     <option >Mastered</option>
