@@ -8,9 +8,9 @@ interface InputProps {
 }
 
 const Select: React.FC<InputProps> = ({ name, value, className }) => {
-  className = className + theme ? className : theme;
+  className = className ? `${className} ${theme}` : theme;
   return (
-  <select name={name} className={className} value={value? value : "None"}>
+  <select name={name} /* onChange={""} */  className={className} value={value? value : "None"}>
     <option >None</option>
     <option >Trained</option>
     <option >Mastered</option>
@@ -19,5 +19,10 @@ const Select: React.FC<InputProps> = ({ name, value, className }) => {
 
   );
 };
+
+/*
+function resolve(core:number, rank: string, name: string, bonus: number): string {
+  return "None";
+}*/
 
 export default Select;

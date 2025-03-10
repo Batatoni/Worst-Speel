@@ -39,7 +39,6 @@ input:hover {
 select {
   border-radius: 8px;
   border: 2px solid #623a9b;
-  background-color: #16002d;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
@@ -49,7 +48,7 @@ select:hover {
   border-color: #5342a0;
 }
 
-option{
+option {
   border-radius: 8px;
   background-color: solid #623a9b;
   padding: 0.6em 1.2em;
@@ -57,7 +56,6 @@ option{
   font-weight: 500;
   font-family: inherit;
 }
-
 
 body {
   margin: 0;

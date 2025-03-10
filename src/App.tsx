@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import Input from "./components/Input";
 import Select from "./components/Select";
+import Label from "./components/Label";
 
 function App() {
   const [atr, setAttributes] = useState({
@@ -17,14 +18,14 @@ function App() {
   });
 
   const AttAtribute = (name: string, value: number) => {
-    setAttributes(prevAtributtes => ({
+    setAttributes((prevAtributtes) => ({
       ...prevAtributtes,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
   return (
     <>
-      <div className="box-content w-260 h-300 border-4 p-4 rounded-xl border-purple-500/50">
+      <div className="w-280 p-14 bg-white border border-[#623a9b] rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-black dark:border-[#623a9b]">
         <div className="mb-4">
           <h1 className="text-purple-300 font-serif opacity-35 ">
             Dream Realm Spell
@@ -42,10 +43,10 @@ function App() {
             <p className="text-left text-xl">Fragments</p>
             <p className="text-left text-xl">Cores</p>
             <Input name="" type="text" />
-            <Input name="" type="text" />
-            <Input name="" type="text" />
+            <Input name="" type="number" />
+            <Input name="" type="number" className="text-center" />
           </div>
-          <div className="grid grid-cols-3 gap-4 mt-8">
+          <div className="grid grid-cols-3 gap-x-4 gap-y-1 mt-8">
             <p className="text-left text-xl">Body</p>
             <p className="text-left text-xl">Mind</p>
             <p className="text-left text-xl">Soul</p>
@@ -54,36 +55,58 @@ function App() {
             <Input name="" type="number" />
           </div>
           <div className="grid grid-cols-3 gap-4 mt-8">
-            <Input name="" type="text" value={`Strengh [+${atr.Strenght}]`}/>
-            <Input name="" type="text" value={`Dexteriry [+${atr.Agility}]`}/>
-            <Input name="" type="text" value={`Endurance [+${atr.Endurance}]`}/>
-            <Input name="" type="text" value={`Intelligence [+${atr.Intelligence}]`}/>
-            <Input name="" type="text" value={`Knowlodge [+${atr.Knowledge}]`}/>
-            <Input name="" type="text" value={`Perception [+${atr.Perception}]`}/>
-            <Input name="" type="text" value={`Will [+${atr.Will}]`}/>
-            <Input name="" type="text" value={`Control [+${atr.Control}]`}/>
-            <Input name="" type="text" value={`Presence [+${atr.Presence}]`}/>
-            <Select name="select" />
-            <Select name="select" />
-            <Select name="select" />
-            <Select name="select" />
-            <Select name="select" />
-            <Select name="select" />
-            <Select name="select" />
-            <Select name="select" />
-            <Select name="select" />
+            <div >
+            <Label name="Strengh" value={`Strengh [+${atr.Strenght}]`} />
+            <Select name="Strengh" className="w-full" />
+            <Label name="Dexteriry" value={`Dexteriry [+${atr.Agility}]`} />
+            <Select name="Dexteriry" className="w-full"/>
+            <Label name="Endurance" value={`Endurance [+${atr.Endurance}]`} />
+            <Select name="Endurance" className="w-full"/>
+            </div>
+            <div>
+            <Label name="Intelligence"  value={`Intelligence [+${atr.Intelligence}]`} />
+            <Select name="Intelligence" className="w-full"/>
+            <Label name="Knowlodge" value={`Knowlodge [+${atr.Knowledge}]`} />
+            <Select name="Knowlodge" className="w-full"/>
+            <Label name="Perception" value={`Perception [+${atr.Perception}]`} />
+            <Select name="Perception" className="w-full"/>
+            </div>
+            <div>
+            <Label name="Will" value={`Will [+${atr.Will}]`} />
+            <Select name="Will" className="w-full"/>
+            <Label name="Control" value={`Control [+${atr.Control}]`} />
+            <Select name="Control" className="w-full"/>
+            <Label name="Presence" value={`Presence [+${atr.Presence}]`} />
+            <Select name="Presence" className="w-full"/>
+            </div>
           </div>
           <div className="grid grid-cols-3 gap-4 mt-8">
-            <Input name="" type="text" />
-            <Input name="" type="text" />
-            <Input name="" type="text" />
-            <Input name="" type="number" />
-            <Input name="" type="number" />
-            <Input name="" type="number" />
+            <div>
+            <Label value="Weapon" />
+            <Input name="" type="text" className="mb-4" placeholder="Weapon Name" />
+            <Input name="" type="text" placeholder="Weapon Damage"/>
+            </div>
+            <div>
+            <Label value="Shield" />
+            <Input name="" type="text" className="mb-4" placeholder="Shield Name" />
+            <Input name="" type="number" placeholder="Defence Points" />
+            </div>
+            <div>
+            <Label value="Armor" />
+            <Input name="" type="text" className="mb-4" placeholder="Armor Name" />
+            <Input name="" type="number" placeholder="Defence Points" />
+            </div>
           </div>
-          
+          <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mt-8">
+            <div
+              className="bg-purple-600 h-2.5 rounded-full"
+              style={{ width: "50%" }}
+            ></div>
+          </div>
         </div>
-        <button onClick={() => AttAtribute("Strenght", atr.Strenght + 1)} >{atr.Strenght}</button> 
+        <button onClick={() => AttAtribute("Strenght", atr.Strenght + 1)}>
+          {atr.Strenght}
+        </button>
       </div>
     </>
   );
