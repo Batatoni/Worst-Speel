@@ -1,22 +1,32 @@
-import React, { } from 'react';
-import theme from './Theme';
+import React from "react";
+import theme from "./Theme";
 
 interface InputProps {
   name: string;
   value?: "None" | "Trained" | "Mastered" | "Supreme";
   className?: string;
+  onselectchange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const Select: React.FC<InputProps> = ({ name, value, className }) => {
-  className = className ? `${className} ${theme}` : theme;
+const Select: React.FC<InputProps> = ({
+  name,
+  value,
+  className,
+  onselectchange,
+}) => {
+  className = className ? `${className} ${theme} w-full` : `${theme} w-full`;
   return (
-  <select name={name} /* onChange={""} */  className={className} value={value? value : "None"}>
-    <option >None</option>
-    <option >Trained</option>
-    <option >Mastered</option>
-    <option >Supreme</option>
+    <select
+      name={name}
+      onChange={onselectchange}
+      className={className}
+      value={value}
+    >
+      <option value="None">None</option>
+      <option value="Trained">Trained</option>
+      <option value="Mastered">Mastered</option>
+      <option value="Supreme">Supreme</option>
     </select>
-
   );
 };
 
