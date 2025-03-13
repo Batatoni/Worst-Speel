@@ -5,6 +5,7 @@ import Label from "./components/Label";
 import {
   InputMainAtributte,
   SkillSelect,
+  HPBar,
 } from "./components/SpecialComponents";
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
     Control: "None",
     Presence: "None",
     Cores: 0,
+    MaxHp: 50,
+    Hp: 25,
   });
 
   const AttValue = (name: string, value: number | string) => {
@@ -191,11 +194,33 @@ function App() {
               <Input name="" type="number" placeholder="Defence Points" />
             </div>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mt-8">
-            <div
-              className="bg-purple-600 h-2.5 rounded-full"
-              style={{ width: "50%" }}
-            ></div>
+          <HPBar value={atr.Hp} max={atr.MaxHp} />
+          <div className="grid grid-cols-3 gap-4 mt-8">
+            <Input
+              name="Hp"
+              type="text"
+              value={atr.Hp}
+              placeholder="Health Points"
+              onchange={(e) => AttValue("Hp", Number(e.target.value))}
+            />
+            <Input
+              name="MaxHp"
+              type="text"
+              value={atr.MaxHp}
+              placeholder="Max HP"
+              onchange={(e) => AttValue("MaxHp", Number(e.target.value))}
+            />
+            <Input
+              name="Damage Taken"
+              type="text"
+              placeholder="Damage Taken"
+              onchange={(e) => AttValue("", Number(e.target.value))}
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-4 mt-8">
+            <button className="bg-purple-600 text-white rounded-lg p-2">
+              Calculate Damage
+            </button>
           </div>
         </div>
       </div>

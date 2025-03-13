@@ -60,6 +60,22 @@ export function SkillSelect({
     </div>
   );
 }
+
+export function HPBar({ value, max }: { value: number; max: number }) {
+  const percent = (value / max) * 100;
+  return (
+    <div className="mt-8">
+      <Label value={`Health Points: ${value}/${max}`} />
+      <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-800">
+        <div
+          className="bg-purple-600 h-4 rounded-lg"
+          style={{ width: `${percent}%` }}
+        ></div>
+      </div>
+    </div>
+  );
+}
+
 function MultExtract(target: ProfLevel): number {
   switch (target) {
     case "None":
@@ -70,6 +86,7 @@ function MultExtract(target: ProfLevel): number {
       return 3;
     case "Supreme":
       return 4;
+    default:
+      return 1;
   }
-  return 0;
 }
