@@ -6,9 +6,12 @@ import {
   InputMainAtributte,
   SkillSelect,
   HPBar,
+  DmgRedCalculation,
+  DmgTakenAlert,
 } from "./components/SpecialComponents";
 
 function App() {
+  const [visible, setVisible] = useState(false);
   const [atr, setAttributes] = useState({
     Body: 10,
     Mind: 10,
@@ -23,16 +26,25 @@ function App() {
     Control: "None",
     Presence: "None",
     Cores: 0,
+    Shield: 0,
+    ShieldUp: false,
+    Armor: 0,
+    Dmg: 0,
+    DmgTaken: 0,
+    CalcDmgTaken: 0,
     MaxHp: 50,
     Hp: 25,
   });
 
-  const AttValue = (name: string, value: number | string) => {
+
+
+  const AttValue = (name: string, value: number | string | boolean) => {
     setAttributes((prevAtributtes) => ({
       ...prevAtributtes,
       [name]: value,
     }));
   };
+
   return (
     <>
       <div className="w-280 p-14 bg-white border border-[#623a9b] rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-black dark:border-[#623a9b]">
@@ -181,7 +193,13 @@ function App() {
                 className="mb-4"
                 placeholder="Shield Name"
               />
-              <Input name="" type="number" placeholder="Defence Points" />
+              <Input
+                name=""
+                type="number"
+                placeholder="Defence Points"
+                value={atr.Shield}
+                onchange={(e) => AttValue("Shield", Number(e.target.value))}
+              />
             </div>
             <div>
               <Label value="Armor" />
@@ -191,36 +209,80 @@ function App() {
                 className="mb-4"
                 placeholder="Armor Name"
               />
-              <Input name="" type="number" placeholder="Defence Points" />
+              <Input
+                name=""
+                type="number"
+                placeholder="Defence Points"
+                value={atr.Armor}
+                onchange={(e) => AttValue("Armor", Number(e.target.value))}
+              />
             </div>
           </div>
           <HPBar value={atr.Hp} max={atr.MaxHp} />
           <div className="grid grid-cols-3 gap-4 mt-8">
-            <Input
-              name="Hp"
-              type="text"
-              value={atr.Hp}
-              placeholder="Health Points"
-              onchange={(e) => AttValue("Hp", Number(e.target.value))}
-            />
-            <Input
-              name="MaxHp"
-              type="text"
-              value={atr.MaxHp}
-              placeholder="Max HP"
-              onchange={(e) => AttValue("MaxHp", Number(e.target.value))}
-            />
-            <Input
-              name="Damage Taken"
-              type="text"
-              placeholder="Damage Taken"
-              onchange={(e) => AttValue("", Number(e.target.value))}
-            />
+            <div>
+              <Label value="Health Points" />
+              <Input
+                name="Hp"
+                type="text"
+                value={atr.Hp}
+                placeholder="Health Points"
+                onchange={(e) => AttValue("Hp", Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <Label value="Max Health Points" />
+              <Input
+                name="MaxHp"
+                type="text"
+                value={atr.MaxHp}
+                placeholder="Max HP"
+                onchange={(e) => AttValue("MaxHp", Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <Label value="Damage Taken" />
+              <Input
+                name="Damage Taken"
+                type="text"
+                value={atr.Dmg}
+                onchange={(e) => AttValue("Dmg", Number(e.target.value))}
+              />
+            </div>
           </div>
           <div className="grid grid-cols-3 gap-4 mt-8">
-            <button className="bg-purple-600 text-white rounded-lg p-2">
-              Calculate Damage
-            </button>
+            <div className="grid grid-cols-2 gap-4 col-start-3">
+              <button
+                className="bg-purple-600 text-white rounded-lg p-2 w-full"
+                onClick={() => {
+                  const newHp = DmgRedCalculation(
+                    atr.Hp,
+                    atr.Dmg,
+                    atr.Armor,
+                    AttValue,
+                    atr.ShieldUp? atr.Shield : 0
+                  );
+                  AttValue("Hp", newHp);
+                  setVisible(true);
+                }}
+              >
+                Calculate Damage
+              </button>
+              <div className="flex items-center mb-2 ml-4">
+                <input
+                  name="Armor"
+                  type="checkbox"
+                  className="object-left size-7 mt-2 bg-purple-600"
+                  onChange={(e) => AttValue("ShieldUp", e.target.checked)}
+                />
+                <Label value="Shield Up" className="mb-2 ml-2" />
+                <DmgTakenAlert
+                  DmgTaken={atr.CalcDmgTaken}
+                  visible={visible}
+                  setVisible={setVisible}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

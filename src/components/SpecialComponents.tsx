@@ -68,9 +68,9 @@ export function HPBar({ value, max }: { value: number; max: number }) {
       <Label value={`Health Points: ${value}/${max}`} />
       <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-800">
         <div
-          className="bg-purple-600 h-4 rounded-lg"
+          className="bg-purple-600 h-4 rounded-full leading-none text-lg font-medium text-center text-purple-250"
           style={{ width: `${percent}%` }}
-        ></div>
+        >{`${percent}%`}</div>
       </div>
     </div>
   );
@@ -90,3 +90,56 @@ function MultExtract(target: ProfLevel): number {
       return 1;
   }
 }
+
+export function DmgRedCalculation(
+  Hp: number,
+  Dmg: number,
+  Armor: number,
+  AttValue: (name: string, value: number) => void,
+  Shield?: number
+): number {
+  const totalarmor = Armor + (Shield ? Shield : 0);
+  let DmgTaken;
+  if (Dmg / 2 <= totalarmor) {
+    DmgTaken = Dmg * (Dmg / (totalarmor * 3));
+    DmgTaken = Math.round(DmgTaken);
+    AttValue("CalcDmgTaken", DmgTaken);
+    return Hp - DmgTaken;
+  } else {
+    DmgTaken = Dmg - totalarmor;
+    AttValue("CalcDmgTaken", DmgTaken);
+    return Hp - DmgTaken;
+  }
+}
+
+export function DmgTakenAlert({
+  DmgTaken,
+  visible,
+  setVisible,
+}: {
+  DmgTaken: number;
+  visible: boolean;
+  setVisible: (value: boolean) => void;
+}) {
+  const handleClose = () => {
+    setVisible(false);
+  };
+
+  return (
+    <div
+      className={`fixed bottom-4 left-4 bg-black p-4 border-2 border-[#623a9b] rounded-lg shadow-lg max-w-xs flex items-center justify-between ${
+        visible ? "" : "hidden"
+      }`}
+    >
+      <p className="text-lp">You Received <strong className="text-purple-600">{DmgTaken}</strong> points of damage</p>
+      <button
+        onClick={handleClose}
+        className="text-gray-500 hover:text-gray-700 ml-4"
+      >
+        &times;
+      </button>
+    </div>
+  );
+}
+
+export default DmgTakenAlert;

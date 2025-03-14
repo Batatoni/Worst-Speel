@@ -30,9 +30,4 @@ const Select: React.FC<InputProps> = ({
   );
 };
 
-/*
-function resolve(core:number, rank: string, name: string, bonus: number): string {
-  return "None";
-}*/
-
 export default Select;
