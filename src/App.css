@@ -40,3 +40,14 @@
 .read-the-docs {
   color: #1f0da3;
 }
+.no-arrows {
+  -moz-appearance: textfield; /* Para Firefox */
+  -webkit-appearance: none; /* Para Chrome, Safari e Edge */
+  appearance: none; /* Para navegadores que suportam a propriedade padrão */
+}
+
+.no-arrows::-webkit-inner-spin-button,
+.no-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0; /* Remove margens padrão */
+}

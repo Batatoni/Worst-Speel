@@ -17,14 +17,23 @@ function App() {
     Mind: 10,
     Soul: 10,
     Strenght: "None",
+    Strenghtbonus: 0,
     Agility: "None",
+    Agilitybonus: 0,
     Endurance: "None",
+    Endurancebonus: 0,
     Intelligence: "None",
+    Intelligencebonus: 0,
     Knowledge: "None",
+    Knowledgebonus: 0,
     Perception: "None",
+    Perceptionbonus: 0,
     Will: "None",
+    Willbonus: 0,
     Control: "None",
+    Controlbonus: 0,
     Presence: "None",
+    Presencebonus: 0,
     Cores: 0,
     Shield: 0,
     ShieldUp: false,
@@ -103,6 +112,7 @@ function App() {
                 label="Strenght"
                 bonus={atr.Body}
                 globalBonus={atr.Cores}
+                pericBonus={atr.Strenghtbonus}
               />
               <SkillSelect
                 AttValue={AttValue}
@@ -111,6 +121,7 @@ function App() {
                 label="Dexterity"
                 bonus={atr.Body}
                 globalBonus={atr.Cores}
+                pericBonus={atr.Agilitybonus}
               />
               <SkillSelect
                 AttValue={AttValue}
@@ -119,6 +130,7 @@ function App() {
                 label="Endurance"
                 bonus={atr.Body}
                 globalBonus={atr.Cores}
+                pericBonus={atr.Endurancebonus}
               />
             </div>
             <div>
@@ -129,6 +141,7 @@ function App() {
                 label="Intelligence"
                 bonus={atr.Mind}
                 globalBonus={atr.Cores}
+                pericBonus={atr.Intelligencebonus}
               />
               <SkillSelect
                 AttValue={AttValue}
@@ -137,6 +150,7 @@ function App() {
                 label="Knowledge"
                 bonus={atr.Mind}
                 globalBonus={atr.Cores}
+                pericBonus={atr.Knowledgebonus}
               />
               <SkillSelect
                 AttValue={AttValue}
@@ -145,6 +159,7 @@ function App() {
                 label="Perception"
                 bonus={atr.Mind}
                 globalBonus={atr.Cores}
+                pericBonus={atr.Perceptionbonus}
               />
             </div>
             <div>
@@ -155,6 +170,7 @@ function App() {
                 label="Will"
                 bonus={atr.Soul}
                 globalBonus={atr.Cores}
+                pericBonus={atr.Willbonus}
               />
               <SkillSelect
                 AttValue={AttValue}
@@ -163,6 +179,7 @@ function App() {
                 label="Control"
                 bonus={atr.Soul}
                 globalBonus={atr.Cores}
+                pericBonus={atr.Controlbonus}
               />
               <SkillSelect
                 AttValue={AttValue}
@@ -171,6 +188,7 @@ function App() {
                 label="Presence"
                 bonus={atr.Soul}
                 globalBonus={atr.Cores}
+                pericBonus={atr.Presencebonus}
               />
             </div>
           </div>

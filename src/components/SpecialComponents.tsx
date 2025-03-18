@@ -17,6 +17,7 @@ interface SelectProps {
   target: string;
   globalBonus: number;
   AttValue: (name: string, value: number | string) => void;
+  pericBonus: number;
 }
 
 export function InputMainAtributte({ id, value, AttValue }: InputProps) {
@@ -36,27 +37,36 @@ export function SkillSelect({
   label,
   target,
   globalBonus,
+  pericBonus,
   AttValue,
 }: SelectProps) {
   const Mult = MultExtract(target as ProfLevel);
   const atributevalue = Math.floor((bonus - 10) / 2);
-  const FinalAtribute = (atributevalue + globalBonus) * Mult;
+  const FinalAtribute = Math.round((Number(globalBonus) + atributevalue) * Mult) + Number(pericBonus);
   return (
     <div>
       <Label
         value={
-          atributevalue > 0
+          FinalAtribute >= 0
             ? `${label} [+${FinalAtribute}]`
             : `${label} [${FinalAtribute}]`
         }
       />
-      <Select
-        name={name}
-        value={target as ProfLevel}
-        onselectchange={(e) =>
-          AttValue(label, String(e.target.value) as ProfLevel)
-        }
-      />
+      <div className="grid grid-cols-5 gap-4">
+        <Select
+          name={name}
+          value={target as ProfLevel}
+          className="col-span-4"
+          onselectchange={(e) => AttValue(label, String(e.target.value) as ProfLevel)}
+        />
+        <Input
+          type="number"
+          name={label}
+          className="col-span-1 no-arrows"
+          value={pericBonus}
+          onchange={(e) => AttValue(`${label}bonus`, e.target.value)}
+        />
+      </div>
     </div>
   );
 }
@@ -81,11 +91,11 @@ function MultExtract(target: ProfLevel): number {
     case "None":
       return 1;
     case "Trained":
-      return 2;
+      return 1.5;
     case "Mastered":
-      return 3;
+      return 2;
     case "Supreme":
-      return 4;
+      return 3;
     default:
       return 1;
   }
@@ -100,7 +110,7 @@ export function DmgRedCalculation(
 ): number {
   const totalarmor = Armor + (Shield ? Shield : 0);
   let DmgTaken;
-  if (Dmg / 2 <= totalarmor) {
+  if (Dmg / 2 <= totalarmor && Dmg != 0) {
     DmgTaken = Dmg * (Dmg / (totalarmor * 3));
     DmgTaken = Math.round(DmgTaken);
     AttValue("CalcDmgTaken", DmgTaken);
@@ -108,7 +118,7 @@ export function DmgRedCalculation(
   } else {
     DmgTaken = Dmg - totalarmor;
     AttValue("CalcDmgTaken", DmgTaken);
-    return Hp - DmgTaken;
+    return Hp - (DmgTaken>0? DmgTaken : 0);
   }
 }
 
@@ -131,10 +141,13 @@ export function DmgTakenAlert({
         visible ? "" : "hidden"
       }`}
     >
-      <p className="text-lp">You Received <strong className="text-purple-600">{DmgTaken}</strong> points of damage</p>
+      <p className="text-lp">
+        You Received <strong className="text-purple-600">{DmgTaken}</strong>{" "}
+        points of damage
+      </p>
       <button
         onClick={handleClose}
-        className="text-gray-500 hover:text-gray-700 ml-4"
+        className="text-purple-500 hover:text-purple-700 ml-4"
       >
         &times;
       </button>
