@@ -2,6 +2,7 @@
 import Input from "./Input";
 import Select from "./Select";
 import Label from "./Label";
+import { useEffect } from "react";
 
 type ProfLevel = "None" | "Trained" | "Mastered" | "Supreme";
 
@@ -43,6 +44,13 @@ export function SkillSelect({
   const Mult = MultExtract(target as ProfLevel);
   const atributevalue = Math.floor((bonus - 10) / 2);
   const FinalAtribute = Math.round((Number(globalBonus) + atributevalue) * Mult) + Number(pericBonus);
+  
+  useEffect(() => {
+    if (name === "endurance") {
+      AttValue("TotalEndurace", FinalAtribute);
+    }
+  }, [FinalAtribute, name, AttValue]);
+
   return (
     <div>
       <Label
@@ -75,7 +83,7 @@ export function HPBar({ value, max }: { value: number; max: number }) {
   const percent = (value / max) * 100;
   return (
     <div className="mt-8">
-      <Label value={`Health Points: ${value}/${max}`} />
+      <Label className="text-xl" value={`Health Points: ${value}/${max}`} />
       <div className="w-full bg-gray-200 rounded-full h-4 dark:bg-gray-800">
         <div
           className="bg-purple-600 h-4 rounded-full leading-none text-lg font-medium text-center text-purple-250"

@@ -22,6 +22,7 @@ function App() {
     Agilitybonus: 0,
     Endurance: "None",
     Endurancebonus: 0,
+    TotalEndurace: 0,
     Intelligence: "None",
     Intelligencebonus: 0,
     Knowledge: "None",
@@ -41,7 +42,7 @@ function App() {
     Dmg: 0,
     DmgTaken: 0,
     CalcDmgTaken: 0,
-    MaxHp: 50,
+    MaxHp: 25,
     Hp: 25,
   });
 
@@ -53,6 +54,8 @@ function App() {
       [name]: value,
     }));
   };
+  
+  const MaxHp = Math.round(atr.TotalEndurace != 0? atr.MaxHp * ((atr.TotalEndurace * 0.25) + 1): atr.MaxHp);
 
   return (
     <>
@@ -236,7 +239,7 @@ function App() {
               />
             </div>
           </div>
-          <HPBar value={atr.Hp} max={atr.MaxHp} />
+          <HPBar value={atr.Hp} max={MaxHp} />
           <div className="grid grid-cols-3 gap-4 mt-8">
             <div>
               <Label value="Health Points" />
@@ -253,9 +256,8 @@ function App() {
               <Input
                 name="MaxHp"
                 type="text"
-                value={atr.MaxHp}
+                value={MaxHp}
                 placeholder="Max HP"
-                onchange={(e) => AttValue("MaxHp", Number(e.target.value))}
               />
             </div>
             <div>
@@ -270,22 +272,28 @@ function App() {
           </div>
           <div className="grid grid-cols-3 gap-4 mt-8">
             <div className="grid grid-cols-2 gap-4 col-start-3">
-              <button
-                className="bg-purple-600 text-white rounded-lg p-2 w-full"
-                onClick={() => {
+                <div className="relative group">
+                <button
+                  className="bg-purple-600 text-white rounded-lg p-2 w-full"
+                  onClick={() => {
                   const newHp = DmgRedCalculation(
                     atr.Hp,
                     atr.Dmg,
                     atr.Armor,
                     AttValue,
-                    atr.ShieldUp? atr.Shield : 0
+                    atr.ShieldUp ? atr.Shield : 0
                   );
                   AttValue("Hp", newHp);
                   setVisible(true);
-                }}
-              >
-                Calculate Damage
-              </button>
+                  }}
+                >
+                  Calculate Damage
+                </button>
+                <div className="absolute w-90 left-0 bottom-full mb-2 hidden group-hover:block bg-black text-sm rounded-lg p-2 shadow-lg border border-[#623a9b]">
+                  <Label value="Damage Reduction Formula" className="text-base" />
+                  <p className="text-left">O dano é calculado baseado na quantidade de armadura total do player, mas quanto maior for o dano em relação a armadura maior a redução e quanto menor for o dano em relação a armadura menor a redução</p>
+                </div>
+                </div>
               <div className="flex items-center mb-2 ml-4">
                 <input
                   name="Armor"
