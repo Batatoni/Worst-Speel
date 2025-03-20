@@ -6,9 +6,11 @@ import {
   InputMainAtributte,
   SkillSelect,
   HPBar,
-  DmgRedCalculation,
   DmgTakenAlert,
+  AtributteList,
 } from "./components/SpecialComponents";
+import { DmgRedCalculation, RankExtract } from "./components/Functions";
+import theme from "./components/Theme";
 
 function App() {
   const [visible, setVisible] = useState(false);
@@ -36,6 +38,8 @@ function App() {
     Presence: "None",
     Presencebonus: 0,
     Cores: 0,
+    Rank: "Sleeper",
+    Dice: "1d12",
     Shield: 0,
     ShieldUp: false,
     Armor: 0,
@@ -59,7 +63,7 @@ function App() {
 
   return (
     <>
-      <div className="w-280 p-14 bg-white border border-[#623a9b] rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-black dark:border-[#623a9b]">
+      <div className="w-280 p-14 bg-white border-5 border-[#623a9b] rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-black dark:border-[#623a9b]">
         <div className="mb-4">
           <h1 className="text-purple-300 font-serif opacity-35 ">
             Dream Realm Spell
@@ -70,13 +74,24 @@ function App() {
             <p className="text-left text-xl col-span-2">Name</p>
             <p className="text-left text-xl">Dice</p>
             <Input name="" type="text" className="col-span-2" />
-            <Input name="" type="text" />
+            <Input name="" type="text" value={atr.Dice}/>
           </div>
           <div className="grid grid-cols-3 gap-x-4 gap-y-1 mt-8">
             <p className="text-left text-xl">Rank</p>
             <p className="text-left text-xl">Fragments</p>
             <p className="text-left text-xl">Cores</p>
-            <Input name="" type="text" />
+            <select name="" className={theme} value={atr.Rank} onChange={(e) => {
+              AttValue("Rank", e.target.value); 
+              AttValue("Dice", RankExtract(e.target.value)); }
+            }>
+              <option value="Sleeper">Sleeper</option>
+              <option value="Awakened">Awakened</option>
+              <option value="Ascended">Ascended</option>
+              <option value="Transcendent">Transcendent</option>
+              <option value="Supreme">Supreme</option>
+              <option value="Sacred">Sacred</option>
+              <option value="Divine">Divine</option>
+            </select>
             <Input name="" type="number" />
             <Input
               name=""
@@ -310,6 +325,7 @@ function App() {
               </div>
             </div>
           </div>
+          <AtributteList atr={atr} />
         </div>
       </div>
     </>
