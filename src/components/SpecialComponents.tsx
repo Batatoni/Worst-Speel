@@ -1,11 +1,10 @@
-// Date: 03/20/2021
 import Input from "./Input";
 import Select from "./Select";
 import Label from "./Label";
-import { useEffect } from "react";
-import { TotalSkillBonus,  } from "./Functions";
+import { useEffect, useState } from "react";
+import { TotalSkillBonus } from "./Functions";
 
-type ProfLevel = "None" | "Trained" | "Mastered" | "Supreme"; // isso aqui é meio inutil mas f@$#-se
+export type ProfLevel = "None" | "Trained" | "Mastered" | "Supreme"; // isso aqui é meio inutil mas f@$#-se
 
 //#region interfaces que definem os types de uma cacetada de coisas
 
@@ -42,7 +41,7 @@ interface AtrProps {
     Will: string;
     Willbonus: number;
     Control: string;
-    Controlbonus: number
+    Controlbonus: number;
     Presence: string;
     Presencebonus: number;
     Cores: number;
@@ -77,25 +76,28 @@ export function SkillSelect({
   pericBonus,
   AttValue,
 }: SelectProps) {
-  const FinalAtribute = TotalSkillBonus(target as ProfLevel, bonus, globalBonus, pericBonus);
-  
-  useEffect(() => {
-    if (name === "endurance") {
-      AttValue("TotalEndurace", FinalAtribute);
-    }
-  }, [FinalAtribute, name, AttValue]);
+  const FinalAtribute = TotalSkillBonus(
+    target as ProfLevel,
+    bonus,
+    globalBonus,
+    pericBonus
+  );
 
   return (
     <div>
       <Label
-        value={`${label} ${FinalAtribute}`}
+        value={`${label} ${
+          FinalAtribute >= 0 ? `[+${FinalAtribute}]` : `[${FinalAtribute}]`
+        } `}
       />
       <div className="grid grid-cols-5 gap-4">
         <Select
           name={name}
           value={target as ProfLevel}
           className="col-span-4"
-          onselectchange={(e) => AttValue(label, String(e.target.value) as ProfLevel)}
+          onselectchange={(e) =>
+            AttValue(label, String(e.target.value) as ProfLevel)
+          }
         />
         <Input
           type="number"
@@ -127,7 +129,6 @@ export function HPBar({ value, max }: { value: number; max: number }) {
 }
 //#endregion
 
-//tem que arrumar a logica do botao de fechar do dmgtakenalert poderia ter sido bem mais simples do que essa bomba ai que eu fiz copiar do atributteslist
 //#region DmgTakenNotification (O alerta que aparece no canto inferior esquerdo da tela a utilidade dele é mostrar o dano que o jogador tomou)
 export function DmgTakenAlert({
   DmgTaken,
@@ -145,7 +146,9 @@ export function DmgTakenAlert({
   return (
     <div
       className={`fixed bottom-4 left-4 bg-black p-4 border-2 border-[#623a9b] 
-        rounded-lg shadow-lg max-w-xs flex items-center justify-between ${visible ? "" : "hidden"}`}
+        rounded-lg shadow-lg max-w-xs flex items-center justify-between ${
+          visible ? "" : "hidden"
+        }`}
     >
       <p className="text-lp">
         You Received <strong className="text-purple-600">{DmgTaken}</strong>{" "}
@@ -162,12 +165,16 @@ export function DmgTakenAlert({
 }
 //#endregion
 
-//#region AtributteList (A lista de atributos que aparece no canto superior esquerdo da tela muito foda ele)
-export function AtributteList({atr} : AtrProps) {
+//#region AtributteList (A lista de atributos que aparece no canto superior esquerdo da tela muito foda ela
+// pena que o codigo ta todo escaralhado da pra entender porra nenhuma)
+export function AtributteList({
+  atr,
+  setIsVisible,
+}: AtrProps & { setIsVisible: React.Dispatch<React.SetStateAction<boolean>> }) {
+  const [position, setPosition] = useState({ x: 20, y: 200 });
 
   const handleClose = () => {
-    const list = document.getElementById("atributtes_list");
-    list?.style.setProperty("display", "none");
+    setIsVisible(false);
   };
 
   useEffect(() => {
@@ -190,8 +197,10 @@ export function AtributteList({atr} : AtrProps) {
 
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging) {
-        lista.style.left = `${e.clientX - offsetX}px`;
-        lista.style.top = `${e.clientY - offsetY}px`;
+        setPosition({
+          x: e.clientX - offsetX,
+          y: e.clientY - offsetY,
+        });
       }
     };
 
@@ -214,24 +223,231 @@ export function AtributteList({atr} : AtrProps) {
   return (
     <div
       id="atributtes_list"
-      className={`ring-1 ring-purple-500/50 rounded-lg w-90 bg-black fixed`}
+      style={{
+        position: "fixed",
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+      }}
+      className={`ring-2 ring-purple-500/50 rounded-lg w-90 bg-black fixed`}
     >
-      <header className="text-3xl flex border-b border-purple-500/50 w-90 justify-between items-center">
+      <header className="text-3xl flex border-b-2 border-purple-500/50 w-90 justify-between items-center">
         <h6 className="text-left ml-5">Atributos</h6>
-        <button id="BUTN" onClick={handleClose}>&times;</button>
+        <button id="BUTN" onClick={handleClose}>
+          &times;
+        </button>
       </header>
       <ul className="text-left ml-5 text-2x1 list-disc list-inside">
-        <li>{`Strenght ${TotalSkillBonus(atr.Strenght as ProfLevel, atr.Body, atr.Cores, atr.Strenghtbonus)}`}</li>
-        <li>{`Agility ${TotalSkillBonus(atr.Agility as ProfLevel, atr.Body, atr.Cores, atr.Agilitybonus)}`}</li>
-        <li>{`Endurance ${TotalSkillBonus(atr.Endurance as ProfLevel, atr.Body, atr.Cores, atr.Endurancebonus)}`}</li>
-        <li>{`Intelligence ${TotalSkillBonus(atr.Intelligence as ProfLevel, atr.Mind, atr.Cores, atr.Intelligencebonus)}`}</li>
-        <li>{`Knowledge ${TotalSkillBonus(atr.Knowledge as ProfLevel, atr.Mind, atr.Cores, atr.Knowledgebonus)}`}</li>
-        <li>{`Perception ${TotalSkillBonus(atr.Perception as ProfLevel, atr.Mind, atr.Cores, atr.Perceptionbonus)}`}</li>
-        <li>{`Will ${TotalSkillBonus(atr.Will as ProfLevel, atr.Soul, atr.Cores, atr.Willbonus)}`}</li>
-        <li>{`Control ${TotalSkillBonus(atr.Control as ProfLevel, atr.Soul, atr.Cores, atr.Controlbonus)}`}</li>
-        <li>{`Presence ${TotalSkillBonus(atr.Presence as ProfLevel, atr.Soul, atr.Cores, atr.Presencebonus)}`}</li>
+        <AttributeItem
+          name="Strenght"
+          value={`[${
+            TotalSkillBonus(
+              atr.Strenght as ProfLevel,
+              atr.Body,
+              atr.Cores,
+              atr.Strenghtbonus
+            ) >= 0
+              ? "+"
+              : ""
+          }${TotalSkillBonus(
+            atr.Strenght as ProfLevel,
+            atr.Body,
+            atr.Cores,
+            atr.Strenghtbonus
+          )}]`}
+        />
+        <AttributeItem
+          name="Agility"
+          value={`[${
+            TotalSkillBonus(
+              atr.Agility as ProfLevel,
+              atr.Body,
+              atr.Cores,
+              atr.Agilitybonus
+            ) >= 0
+              ? "+"
+              : ""
+          }${TotalSkillBonus(
+            atr.Agility as ProfLevel,
+            atr.Body,
+            atr.Cores,
+            atr.Agilitybonus
+          )}]`}
+        />
+        <AttributeItem
+          name="Endurance"
+          value={`[${
+            TotalSkillBonus(
+              atr.Endurance as ProfLevel,
+              atr.Body,
+              atr.Cores,
+              atr.Endurancebonus
+            ) >= 0
+              ? "+"
+              : ""
+          }${TotalSkillBonus(
+            atr.Endurance as ProfLevel,
+            atr.Body,
+            atr.Cores,
+            atr.Endurancebonus
+          )}]`}
+        />
+        <AttributeItem
+          name="Intelligence"
+          value={`[${
+            TotalSkillBonus(
+              atr.Intelligence as ProfLevel,
+              atr.Mind,
+              atr.Cores,
+              atr.Intelligencebonus
+            ) >= 0
+              ? "+"
+              : ""
+          }${TotalSkillBonus(
+            atr.Intelligence as ProfLevel,
+            atr.Mind,
+            atr.Cores,
+            atr.Intelligencebonus
+          )}]`}
+        />
+        <AttributeItem
+          name="Knowledge"
+          value={`[${
+            TotalSkillBonus(
+              atr.Knowledge as ProfLevel,
+              atr.Mind,
+              atr.Cores,
+              atr.Knowledgebonus
+            ) >= 0
+              ? "+"
+              : ""
+          }${TotalSkillBonus(
+            atr.Knowledge as ProfLevel,
+            atr.Mind,
+            atr.Cores,
+            atr.Knowledgebonus
+          )}]`}
+        />
+        <AttributeItem
+          name="Perception"
+          value={`[${
+            TotalSkillBonus(
+              atr.Perception as ProfLevel,
+              atr.Mind,
+              atr.Cores,
+              atr.Perceptionbonus
+            ) >= 0
+              ? "+"
+              : ""
+          }${TotalSkillBonus(
+            atr.Perception as ProfLevel,
+            atr.Mind,
+            atr.Cores,
+            atr.Perceptionbonus
+          )}]`}
+        />
+        <AttributeItem
+          name="Will"
+          value={`[${
+            TotalSkillBonus(
+              atr.Will as ProfLevel,
+              atr.Soul,
+              atr.Cores,
+              atr.Willbonus
+            ) >= 0
+              ? "+"
+              : ""
+          }${TotalSkillBonus(
+            atr.Will as ProfLevel,
+            atr.Soul,
+            atr.Cores,
+            atr.Willbonus
+          )}]`}
+        />
+        <AttributeItem
+          name="Control"
+          value={`[${
+            TotalSkillBonus(
+              atr.Control as ProfLevel,
+              atr.Soul,
+              atr.Cores,
+              atr.Controlbonus
+            ) >= 0
+              ? "+"
+              : ""
+          }${TotalSkillBonus(
+            atr.Control as ProfLevel,
+            atr.Soul,
+            atr.Cores,
+            atr.Controlbonus
+          )}]`}
+        />
+        <AttributeItem
+          name="Presence"
+          value={`[${
+            TotalSkillBonus(
+              atr.Presence as ProfLevel,
+              atr.Soul,
+              atr.Cores,
+              atr.Presencebonus
+            ) >= 0
+              ? "+"
+              : ""
+          }${TotalSkillBonus(
+            atr.Presence as ProfLevel,
+            atr.Soul,
+            atr.Cores,
+            atr.Presencebonus
+          )}]`}
+        />
       </ul>
     </div>
   );
 }
 //#endregion
+
+//#region AttributeItem (Os itens que sao listados no AttributeList, tentei deixar o atributelist menos escaralhado mas ainda ta uma porra)
+
+function AttributeItem({ name, value }: { name: string; value: string }) {
+  return (
+    <li className="text-[22px]">
+      {name} <strong className="text-purple-600">{value}</strong>
+    </li>
+  );
+}
+//#endregion
+
+export function TabChanger() {
+
+  return (
+    <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
+      <ul
+        className="flex flex-wrap -mb-px text-sm text-[24px] opacity-60 text-center"
+        id="default-styled-tab"
+        role="tablist"
+      >
+        <li className="me-2" role="presentation">
+          <button
+            className="inline-block p-4 border-b-2 rounded-t-lg"
+            type="button"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false"
+          >
+            Attributes
+          </button>
+        </li> 
+        <li className="me-2" role="presentation">
+          <button
+            className="inline-block p-4 border-b-2 rounded-t-lg "
+            type="button"
+            role="tab"
+            aria-controls="dashboard"
+            aria-selected="false"
+          >
+            Character
+          </button>
+        </li>
+      </ul>
+    </div>
+  );
+}

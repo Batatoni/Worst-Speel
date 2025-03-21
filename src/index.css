@@ -6,7 +6,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(234, 189, 246, 0.87);
+  color: rgba(243, 211, 255, 0.87);
   background-color: #16002d;
 
   font-synthesis: none;
@@ -69,6 +69,13 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
   text-align: center;
+}
+
+h2 {
+  font-size: 2em;
+  margin-top: 1.5em;
+  line-height: 1.1;
+  text-align: left;
 }
 
 button {

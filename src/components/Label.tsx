@@ -7,7 +7,7 @@ interface InputProps {
 }
 
 const Label: React.FC<InputProps> = ({ name, className, value, onchange}) => {
-  const change: string = "text-left mt-4";
+  const change: string = "text-left text-lg mt-4";
   className= className? `${className} ${change}` : change;
   return <p className={className} id={name} onChange={onchange}>{value}</p>;
 };

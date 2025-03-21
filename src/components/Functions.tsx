@@ -1,4 +1,4 @@
-type ProfLevel = "None" | "Trained" | "Mastered" | "Supreme";
+import { ProfLevel } from "./SpecialComponents";
 
 export function MultExtract(target: ProfLevel): number {
   switch (target) {
@@ -26,12 +26,11 @@ export function RankExtract(target: string): string {
         default: return "";
 }
 }
-export function TotalSkillBonus( target: ProfLevel, bonus: number, globalBonus: number, pericBonus: number): string {
+export function TotalSkillBonus( target: ProfLevel, bonus: number, globalBonus: number, pericBonus: number): number {
   const Mult = MultExtract(target as ProfLevel);
   const atributevalue = Math.floor((bonus - 10) / 2);
   const FinalAtribute = Math.round((Number(globalBonus) + atributevalue) * Mult) + Number(pericBonus);
-  const value = (FinalAtribute >=0 ? `[+${FinalAtribute}]` : `[${FinalAtribute}]` ) ;
-  return value;
+  return FinalAtribute;
 }
 
 export function DmgRedCalculation(
