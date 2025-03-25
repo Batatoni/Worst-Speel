@@ -27,25 +27,40 @@ a:hover {
 input {
   border-radius: 8px;
   border: 2px solid #623a9b;
+  outline: 0px solid #623a9b; 
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
 }
 input:hover {
-  border-color: #5342a0;
+  outline: 3px solid #623a9b;
 }
 
 select {
   border-radius: 8px;
   border: 2px solid #623a9b;
+  outline: 0px solid #623a9b; 
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
 }
 select:hover {
-  border-color: #5342a0;
+  outline: 3px solid #623a9b;
+}
+
+textarea {
+  border-radius: 8px;
+  border: 2px solid #623a9b;
+  outline: 0px solid #623a9b; 
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+}
+textarea:hover {
+  outline: 3px solid #623a9b;
 }
 
 option {
@@ -77,6 +92,11 @@ h2 {
   line-height: 1.1;
   text-align: left;
 }
+h3 {
+  font-size: 1.5em;
+  line-height: 1.1;
+  text-align: left;
+}
 
 button {
   border-radius: 8px;
@@ -89,12 +109,9 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #361e56;
+  border-color: #623a9b;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+
 
 @media (prefers-color-scheme: light) {
   :root {

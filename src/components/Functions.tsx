@@ -1,5 +1,45 @@
 import { ProfLevel } from "./SpecialComponents";
 
+export type Atributte = {
+  name: string
+  Body: number,
+  Mind: number,
+  Soul: number,
+  Strenght: string,
+  Strenghtbonus: number,
+  Agility: string,
+  Agilitybonus: number,
+  Endurance: string,
+  Endurancebonus: number,
+  Intelligence: string,
+  Intelligencebonus: number,
+  Knowledge: string,
+  Knowledgebonus: number,
+  Perception: string,
+  Perceptionbonus: number,
+  Will: string,
+  Willbonus: number,
+  Control: string,
+  Controlbonus: number,
+  Presence: string,
+  Presencebonus: number,
+  Cores: number,
+  Rank: string,
+  Dice: string,
+  Shield: number,
+  ShieldUp: boolean,
+  Armor: number,
+  Dmg: number,
+  DmgTaken: number,
+  CalcDmgTaken: number,
+  MaxHp: number,
+  Hp: number,
+  traces: string,
+  ideas: string,
+  conections: string,
+  note: string,
+}
+
 export function MultExtract(target: ProfLevel): number {
   switch (target) {
     case "None":

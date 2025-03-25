@@ -418,8 +418,21 @@ function AttributeItem({ name, value }: { name: string; value: string }) {
 
 export function TabChanger() {
 
+  const handletabattribute = (target: number) => {
+
+    const target2 = document.getElementById(`Tela ${target} Character`);
+
+    for(let i = 0; i <= 2; i++) {
+      const Hided = document.getElementById(`Tela ${i} Character`)
+      Hided?.setAttribute("hidden", "")
+    }
+
+    target2?.removeAttribute("hidden");
+  }
+    
+
   return (
-    <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
+    <div className="mb-4 border-b border-purple-500/50">
       <ul
         className="flex flex-wrap -mb-px text-sm text-[24px] opacity-60 text-center"
         id="default-styled-tab"
@@ -427,11 +440,12 @@ export function TabChanger() {
       >
         <li className="me-2" role="presentation">
           <button
-            className="inline-block p-4 border-b-2 rounded-t-lg"
+            className="inline-block p-4 border-b-2 rounded-t-lg hover:border-purple-500"
             type="button"
             role="tab"
             aria-controls="profile"
             aria-selected="false"
+            onClick={() => handletabattribute(1)}
           >
             Attributes
           </button>
@@ -443,8 +457,33 @@ export function TabChanger() {
             role="tab"
             aria-controls="dashboard"
             aria-selected="false"
+            onClick={() => handletabattribute(2)}
           >
             Character
+          </button>
+          </li>
+          <li className="me-2" role="presentation">
+          <button
+            className="inline-block p-4 border-b-2 rounded-t-lg "
+            type="button"
+            role="tab"
+            aria-controls="dashboard"
+            aria-selected="false"
+            onClick={() => handletabattribute(3)}
+          >
+            Aspect
+          </button>
+        </li>
+        <li className="me-2" role="presentation">
+          <button
+            className="inline-block p-4 border-b-2 rounded-t-lg "
+            type="button"
+            role="tab"
+            aria-controls="dashboard"
+            aria-selected="false"
+            onClick={() => handletabattribute(4)}
+          >
+            Memorys
           </button>
         </li>
       </ul>
