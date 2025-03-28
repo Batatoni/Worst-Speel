@@ -10,6 +10,7 @@ import {
   AtributteList,
   ProfLevel,
   TabChanger,
+  AspectAbilits,
 } from "./components/SpecialComponents";
 import {
   DmgRedCalculation,
@@ -25,9 +26,7 @@ function App() {
   
   /* Não curti muito esse initialAtr tentar mudar ele depois sei la ele me parece bem bugavel */
 
-  const initialAtr = () => {
-    const fichasalva = localStorage.getItem("sheet");
-    return fichasalva ? JSON.parse(fichasalva) as Atributte : {
+  const defaultAttributes: Atributte = {
       name: "",
       Body: 10,
       Mind: 10,
@@ -64,31 +63,45 @@ function App() {
       traces: "",
       ideas: "",
       conections: "",
-      note: "",
-    };
+      note: ""
   };
 
-  const [atr, setAttributes] = useState(initialAtr);
+  const [atr, setAttributes] = useState<Atributte>(defaultAttributes);
 
-  const AttValue = (name: string, value: number | string | boolean) => {
-    setAttributes((prevAtributtes) => ({
-      ...prevAtributtes,
-      [name]: value,
+  const AttValue = (name: keyof Atributte, value: number | string | boolean) => {
+    setAttributes(prev => ({
+      ...prev,
+      [name]: value
     }));
   };
 
   useEffect(() => {
-      const fichasalva = localStorage.getItem("sheet");
-      console.log("Recuperando do localStorage:", fichasalva);
-      if (fichasalva) {
-        const dados = JSON.parse(fichasalva);
-        setAttributes(dados);
+    const loadData = () => {
+      const saved = localStorage.getItem("sheet");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          setAttributes(parsed);
+        } catch (e) {
+          console.error("Failed to load character data", e);
+        }
       }
+    };
+    loadData();
   }, []);
 
   useEffect(() => {
-    console.log("Salvando no localStorage:", atr);
-    localStorage.setItem("sheet", JSON.stringify(atr))
+    console.log(atr); // para testes remover depois
+  }, [atr])
+
+  useEffect(() => {
+   const saveData = () => {
+      const dataToSave = atr
+      localStorage.setItem("sheet", JSON.stringify(dataToSave));
+    };
+    
+    const timer = setTimeout(saveData, 500);
+    return () => clearTimeout(timer);
   }, [atr])
 
   const TotalEndurace = TotalSkillBonus(
@@ -109,7 +122,7 @@ function App() {
 
   return (
     <>
-      <div className="w-280 p-14 bg-white border-4 border-[#623a9b] rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-black dark:border-[#623a9b]">
+      <div className="w-300 p-14 border-4 border-[#623a9b] rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-black dark:border-[#623a9b]">
         <div className="mb-4">
           <h1 className="text-purple-300 font-serif opacity-35 ">
             Dream Realm Spell
@@ -427,19 +440,16 @@ function App() {
           {/* Fim da Tela2 Character Profile */}
           <div id="Tela 3 Character" hidden>
             <h2>Aspect</h2>
-            <div className="flex">
-            <Input type="text" name="Aspect_Name" placeholder="Aspect Name"/>
-            <Input type="text" name="Aspect_Rank" placeholder="Aspect Rank"/>
+            <div className="flex gap-4">
+            <Input type="text" name="Aspect_Name" placeholder="Aspect Name" className="w-90"/>
+            <Input type="text" name="Aspect_Rank" placeholder="Aspect Rank" className="w-40"/>
             </div>
               <h3>Aspect Description</h3>
-              <textarea className="w-full" rows={4} placeholder="Aspect Description"/>
-              <h3>Aspect Abilitys</h3>
-              <div className="grid grid-cols-2 gap-2">
-                <Input type="Text" name="AspAbilitName1" className="w-40" placeholder="Ability Name"/>
-                <Label value="-Dormant-" className="font-bold" />
-              </div>
-              <textarea className="w-full" rows={4} placeholder="Ability Description"/>
-            
+              <textarea className="w-full mb-4" rows={4} placeholder="Aspect Description"/>
+              <AspectAbilits />   
+            <h2 className="mb-2">Flaw</h2>
+            <Input type="text" name="Flaw_Name" placeholder="Flaw Name" className="object-left w-46 mb-4 mr-270"/>
+            <textarea className="w-full mb-4" rows={4} placeholder="Flaw Description"/>
           </div>
           {/* Fim da Tela 3 Character Aspect */}
           <DmgTakenAlert

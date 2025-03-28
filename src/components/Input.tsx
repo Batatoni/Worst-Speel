@@ -22,7 +22,7 @@ const Input: React.FC<InputProps> = ({
 }) => {
   const change: string = "text-xl w-full";
   className = className
-    ? `${theme} ${change} ${className}`
+    ? `${theme} text-xl ${className}`
     : `${theme} ${change}`;
   return (
     <input

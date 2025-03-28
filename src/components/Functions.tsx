@@ -1,6 +1,14 @@
 import { ProfLevel } from "./SpecialComponents";
 
-export type Atributte = {
+export type Aspect =  [
+{name: string, description: string},
+{name: string, description: string},
+{name: string, description: string},
+{name: string, description: string},
+{name: string, description: string}
+]
+
+export type Atributte = { // isso aqui ta uma porra eu 100% vou esquecer de atualizar aqui e vai tudo dar errado e eu nao vou saber o porque
   name: string
   Body: number,
   Mind: number,
@@ -77,7 +85,7 @@ export function DmgRedCalculation(
   Hp: number,
   Dmg: number,
   Armor: number,
-  AttValue: (name: string, value: number) => void,
+  AttValue: (name: keyof Atributte, value: number | string | boolean) => void,
   Shield?: number
 ): number {
   const totalarmor = Armor + (Shield ? Shield : 0);

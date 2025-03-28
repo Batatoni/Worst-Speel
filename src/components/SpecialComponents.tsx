@@ -2,7 +2,7 @@ import Input from "./Input";
 import Select from "./Select";
 import Label from "./Label";
 import { useEffect, useState } from "react";
-import { TotalSkillBonus } from "./Functions";
+import { Aspect, Atributte, TotalSkillBonus } from "./Functions";
 
 export type ProfLevel = "None" | "Trained" | "Mastered" | "Supreme"; // isso aqui é meio inutil mas f@$#-se
 
@@ -11,7 +11,7 @@ export type ProfLevel = "None" | "Trained" | "Mastered" | "Supreme"; // isso aqu
 interface InputProps {
   id: string;
   value?: string | number;
-  AttValue: (name: string, value: number) => void;
+  AttValue: (name: keyof Atributte, value: number | string | boolean) => void;
 }
 
 interface SelectProps {
@@ -20,7 +20,7 @@ interface SelectProps {
   label: string;
   target: string;
   globalBonus: number;
-  AttValue: (name: string, value: number | string) => void;
+  AttValue: (name: keyof Atributte, value: number | string | boolean) => void;
   pericBonus: number;
 }
 
@@ -61,7 +61,7 @@ export function InputMainAtributte({ id, value, AttValue }: InputProps) {
       name={id}
       value={value}
       className="text-center"
-      onchange={(e) => AttValue(id, Number(e.target.value))}
+      onchange={(e) => AttValue(id as keyof Atributte, Number(e.target.value))}
     />
   );
 }
@@ -96,7 +96,7 @@ export function SkillSelect({
           value={target as ProfLevel}
           className="col-span-4"
           onselectchange={(e) =>
-            AttValue(label, String(e.target.value) as ProfLevel)
+            AttValue(label as keyof Atributte, String(e.target.value) as ProfLevel)
           }
         />
         <Input
@@ -104,7 +104,7 @@ export function SkillSelect({
           name={label}
           className="col-span-1 no-arrows"
           value={pericBonus}
-          onchange={(e) => AttValue(`${label}bonus`, e.target.value)}
+          onchange={(e) => AttValue(`${label}bonus` as keyof Atributte, e.target.value)}
         />
       </div>
     </div>
@@ -166,7 +166,6 @@ export function DmgTakenAlert({
 //#endregion
 
 //#region AtributteList (A lista de atributos que aparece no canto superior esquerdo da tela muito foda ela
-// pena que o codigo ta todo escaralhado da pra entender porra nenhuma)
 export function AtributteList({
   atr,
   setIsVisible,
@@ -176,6 +175,18 @@ export function AtributteList({
   const handleClose = () => {
     setIsVisible(false);
   };
+
+  const attributes = [
+    { name: "Strenght", profLevel: atr.Strenght, base: atr.Body, bonus: atr.Strenghtbonus },
+    { name: "Agility", profLevel: atr.Agility, base: atr.Body, bonus: atr.Agilitybonus },
+    { name: "Endurance", profLevel: atr.Endurance, base: atr.Body, bonus: atr.Endurancebonus },
+    { name: "Intelligence", profLevel: atr.Intelligence, base: atr.Mind, bonus: atr.Intelligencebonus },
+    { name: "Knowledge", profLevel: atr.Knowledge, base: atr.Mind, bonus: atr.Knowledgebonus },
+    { name: "Perception", profLevel: atr.Perception, base: atr.Mind, bonus: atr.Perceptionbonus },
+    { name: "Will", profLevel: atr.Will, base: atr.Soul, bonus: atr.Willbonus },
+    { name: "Control", profLevel: atr.Control, base: atr.Soul, bonus: atr.Controlbonus },
+    { name: "Presence", profLevel: atr.Presence, base: atr.Soul, bonus: atr.Presencebonus },
+  ];
 
   useEffect(() => {
     const lista = document.getElementById("atributtes_list")!;
@@ -237,168 +248,21 @@ export function AtributteList({
         </button>
       </header>
       <ul className="text-left ml-5 text-2x1 list-disc list-inside">
-        <AttributeItem
-          name="Strenght"
-          value={`[${
-            TotalSkillBonus(
-              atr.Strenght as ProfLevel,
-              atr.Body,
-              atr.Cores,
-              atr.Strenghtbonus
-            ) >= 0
-              ? "+"
-              : ""
-          }${TotalSkillBonus(
-            atr.Strenght as ProfLevel,
-            atr.Body,
+      {attributes.map((attr) => {
+          const totalBonus = TotalSkillBonus(
+            attr.profLevel as ProfLevel,
+            attr.base,
             atr.Cores,
-            atr.Strenghtbonus
-          )}]`}
-        />
-        <AttributeItem
-          name="Agility"
-          value={`[${
-            TotalSkillBonus(
-              atr.Agility as ProfLevel,
-              atr.Body,
-              atr.Cores,
-              atr.Agilitybonus
-            ) >= 0
-              ? "+"
-              : ""
-          }${TotalSkillBonus(
-            atr.Agility as ProfLevel,
-            atr.Body,
-            atr.Cores,
-            atr.Agilitybonus
-          )}]`}
-        />
-        <AttributeItem
-          name="Endurance"
-          value={`[${
-            TotalSkillBonus(
-              atr.Endurance as ProfLevel,
-              atr.Body,
-              atr.Cores,
-              atr.Endurancebonus
-            ) >= 0
-              ? "+"
-              : ""
-          }${TotalSkillBonus(
-            atr.Endurance as ProfLevel,
-            atr.Body,
-            atr.Cores,
-            atr.Endurancebonus
-          )}]`}
-        />
-        <AttributeItem
-          name="Intelligence"
-          value={`[${
-            TotalSkillBonus(
-              atr.Intelligence as ProfLevel,
-              atr.Mind,
-              atr.Cores,
-              atr.Intelligencebonus
-            ) >= 0
-              ? "+"
-              : ""
-          }${TotalSkillBonus(
-            atr.Intelligence as ProfLevel,
-            atr.Mind,
-            atr.Cores,
-            atr.Intelligencebonus
-          )}]`}
-        />
-        <AttributeItem
-          name="Knowledge"
-          value={`[${
-            TotalSkillBonus(
-              atr.Knowledge as ProfLevel,
-              atr.Mind,
-              atr.Cores,
-              atr.Knowledgebonus
-            ) >= 0
-              ? "+"
-              : ""
-          }${TotalSkillBonus(
-            atr.Knowledge as ProfLevel,
-            atr.Mind,
-            atr.Cores,
-            atr.Knowledgebonus
-          )}]`}
-        />
-        <AttributeItem
-          name="Perception"
-          value={`[${
-            TotalSkillBonus(
-              atr.Perception as ProfLevel,
-              atr.Mind,
-              atr.Cores,
-              atr.Perceptionbonus
-            ) >= 0
-              ? "+"
-              : ""
-          }${TotalSkillBonus(
-            atr.Perception as ProfLevel,
-            atr.Mind,
-            atr.Cores,
-            atr.Perceptionbonus
-          )}]`}
-        />
-        <AttributeItem
-          name="Will"
-          value={`[${
-            TotalSkillBonus(
-              atr.Will as ProfLevel,
-              atr.Soul,
-              atr.Cores,
-              atr.Willbonus
-            ) >= 0
-              ? "+"
-              : ""
-          }${TotalSkillBonus(
-            atr.Will as ProfLevel,
-            atr.Soul,
-            atr.Cores,
-            atr.Willbonus
-          )}]`}
-        />
-        <AttributeItem
-          name="Control"
-          value={`[${
-            TotalSkillBonus(
-              atr.Control as ProfLevel,
-              atr.Soul,
-              atr.Cores,
-              atr.Controlbonus
-            ) >= 0
-              ? "+"
-              : ""
-          }${TotalSkillBonus(
-            atr.Control as ProfLevel,
-            atr.Soul,
-            atr.Cores,
-            atr.Controlbonus
-          )}]`}
-        />
-        <AttributeItem
-          name="Presence"
-          value={`[${
-            TotalSkillBonus(
-              atr.Presence as ProfLevel,
-              atr.Soul,
-              atr.Cores,
-              atr.Presencebonus
-            ) >= 0
-              ? "+"
-              : ""
-          }${TotalSkillBonus(
-            atr.Presence as ProfLevel,
-            atr.Soul,
-            atr.Cores,
-            atr.Presencebonus
-          )}]`}
-        />
+            attr.bonus
+          );
+          return (
+            <AttributeItem
+              key={attr.name}              
+              name={attr.name}
+              value={`[${totalBonus >= 0 ? "+" : ""}${totalBonus}]`}
+            />
+          );
+        })}
       </ul>
     </div>
   );
@@ -416,13 +280,14 @@ function AttributeItem({ name, value }: { name: string; value: string }) {
 }
 //#endregion
 
+//#region TabChanger (O script e o body da tabela de botoes utilizada para trocar a tela da ficha para profile, itens, aspect, etc...)
 export function TabChanger() {
 
   const handletabattribute = (target: number) => {
 
     const target2 = document.getElementById(`Tela ${target} Character`);
 
-    for(let i = 0; i <= 2; i++) {
+    for(let i = 0; i <= 3; i++) {
       const Hided = document.getElementById(`Tela ${i} Character`)
       Hided?.setAttribute("hidden", "")
     }
@@ -490,3 +355,76 @@ export function TabChanger() {
     </div>
   );
 }
+//#endregion
+ 
+//#region Aspect Ability
+
+export function AspectAbilits()
+{
+
+  const aspect = [
+    {name: "1", description: "2"},
+    {name: "3", description: "4"},
+    {name: "5", description: "6"},
+    {name: "", description: ""},
+    {name: "", description: ""}
+  ] as Aspect
+
+  const [AspectArray, setAtrbiutes] = useState<Aspect>(aspect);
+  const [enabledranks, setEnabledRanks] = useState<string[]>(["Dormant"]);
+
+
+const AttValue = (index: number, name: string, value: number | string) => {
+  
+  setAtrbiutes((prevatribute) => {
+    const updated = [...prevatribute];
+    updated[index] = { ...updated[index], [name]: value };
+    console.log(updated);
+    return updated as Aspect;
+  });
+};
+
+  const ranks = ["Dormant", "Awakened", "Ascended", "Transcended", "Supreme"]; 
+
+  const handleaddrank = () => {
+    setEnabledRanks((prev) => {
+      const nextRank = ranks[prev.length]
+      if(nextRank){
+        return[...prev, nextRank];
+      }
+      return ["Dormant"];
+    })
+  }
+
+  let i = -1;
+  return(
+    <>
+    <div style={{marginLeft: "-35px"}} className="flex border-b-4 border-[#623a9b] w-300 shadow-sm sm:p-6 md:p-8 justify-between">
+    <h2 className="mb-4">Aspect Abilitys</h2>
+    <button 
+    className="bg-purple-600 mt-9 h-15 text-white w-30 rounded-lg p-2 hover:bg-purple-700"
+    onClick={handleaddrank}
+    >Add</button>
+    </div>
+    {AspectArray.map(() => { 
+      i++
+      const fixI = i;
+      return(
+      <div style={{marginLeft: '-35px'}} className="relative group border-b-4 w-300 border-[#623a9b] shadow-sm sm:p-6 md:p-8" hidden={!enabledranks.includes(ranks[fixI])}>{/* Tem que mudar para seila adicionar um button Add que libera a visao das demais abilidades */}
+        <div className="flex gap-4 items-center mb-3 mt-5">
+          <Input type="Text" name={`AbilitName_0${fixI}`} className="w-50" placeholder="Ability Name" value={AspectArray[fixI].name} onchange={(e) => AttValue(fixI, "name", e.target.value)}/>
+          <Label value={`Rank [ ${ranks[fixI]} ]`} className="font-bold text-[25px]"/>
+        </div>
+        <textarea className="w-full" rows={3} placeholder="Ability Description" value={AspectArray[fixI].description} onChange={(e) => AttValue(fixI, "description", e.target.value)}/>
+        <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-black text-sm rounded-lg p-2 shadow-lg border border-[#623a9b]">
+          <Label name="teste" value="testesdasdasdasdasdasd"/>
+        </div>
+      </div>
+      )
+})
+}  
+    </>
+  )
+}
+
+//#endregion
