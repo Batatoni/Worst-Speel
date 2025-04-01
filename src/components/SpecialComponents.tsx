@@ -2,7 +2,8 @@ import Input from "./Input";
 import Select from "./Select";
 import Label from "./Label";
 import { useEffect, useState } from "react";
-import { Aspect, Atributte, TotalSkillBonus } from "./Functions";
+import { Aspect, AspectAttribute, Atributte, GroupAttribute, TotalSkillBonus } from "./Functions";
+import { Chip } from "@material-tailwind/react";
 
 export type ProfLevel = "None" | "Trained" | "Mastered" | "Supreme"; // isso aqui é meio inutil mas f@$#-se
 
@@ -359,32 +360,11 @@ export function TabChanger() {
  
 //#region Aspect Ability
 
-export function AspectAbilits()
+export function AspectAbilits({atr, func}: {atr: Aspect, func:(type: keyof AspectAttribute, index: number, name: string, value: number | string) => void})
 {
-
-  const aspect = [
-    {name: "1", description: "2"},
-    {name: "3", description: "4"},
-    {name: "5", description: "6"},
-    {name: "", description: ""},
-    {name: "", description: ""}
-  ] as Aspect
-
-  const [AspectArray, setAtrbiutes] = useState<Aspect>(aspect);
   const [enabledranks, setEnabledRanks] = useState<string[]>(["Dormant"]);
 
-
-const AttValue = (index: number, name: string, value: number | string) => {
-  
-  setAtrbiutes((prevatribute) => {
-    const updated = [...prevatribute];
-    updated[index] = { ...updated[index], [name]: value };
-    console.log(updated);
-    return updated as Aspect;
-  });
-};
-
-  const ranks = ["Dormant", "Awakened", "Ascended", "Transcended", "Supreme"]; 
+const ranks = ["Dormant", "Awakened", "Ascended", "Transcended", "Supreme"]; 
 
   const handleaddrank = () => {
     setEnabledRanks((prev) => {
@@ -406,19 +386,16 @@ const AttValue = (index: number, name: string, value: number | string) => {
     onClick={handleaddrank}
     >Add</button>
     </div>
-    {AspectArray.map(() => { 
+    {atr.map(() => { 
       i++
       const fixI = i;
       return(
-      <div style={{marginLeft: '-35px'}} className="relative group border-b-4 w-300 border-[#623a9b] shadow-sm sm:p-6 md:p-8" hidden={!enabledranks.includes(ranks[fixI])}>{/* Tem que mudar para seila adicionar um button Add que libera a visao das demais abilidades */}
+      <div key={fixI} style={{marginLeft: '-35px'}} className="relative group border-b-4 w-300 border-[#623a9b] shadow-sm sm:p-6 md:p-8" hidden={!enabledranks.includes(ranks[fixI])}>{/* Tem que mudar para seila adicionar um button Add que libera a visao das demais abilidades */}
         <div className="flex gap-4 items-center mb-3 mt-5">
-          <Input type="Text" name={`AbilitName_0${fixI}`} className="w-50" placeholder="Ability Name" value={AspectArray[fixI].name} onchange={(e) => AttValue(fixI, "name", e.target.value)}/>
+          <Input type="Text" name={`AbilitName_0${fixI}`} className="w-50" placeholder="Ability Name" value={atr[fixI].name} onchange={(e) => func("aspect", fixI, "name", e.target.value)}/>
           <Label value={`Rank [ ${ranks[fixI]} ]`} className="font-bold text-[25px]"/>
         </div>
-        <textarea className="w-full" rows={3} placeholder="Ability Description" value={AspectArray[fixI].description} onChange={(e) => AttValue(fixI, "description", e.target.value)}/>
-        <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-black text-sm rounded-lg p-2 shadow-lg border border-[#623a9b]">
-          <Label name="teste" value="testesdasdasdasdasdasd"/>
-        </div>
+        <textarea className="w-full" rows={3} placeholder="Ability Description" value={atr[fixI].description} onChange={(e) => func("aspect", fixI, "description", e.target.value)}/>
       </div>
       )
 })
@@ -427,4 +404,28 @@ const AttValue = (index: number, name: string, value: number | string) => {
   )
 }
 
+//#endregion
+
+//#region AttributeGroup
+export function AttributeGroup({atr, func}: {atr: GroupAttribute, func:(type: keyof AspectAttribute, index: number, name: string, value: number | string | boolean) => void})
+{
+  
+  return(
+    <div>
+    {atr.map((attr, index) => {
+
+    return(
+  <div className="relative group inline-block">
+    <div className="cursor-pointer" onClick={()=> func("attribute", index, "IsOpen", !attr.IsOpen)}>
+    <Chip value={attr.name} className="bg-purple-600 text-bold p-2 mr-4"/>
+    </div>
+    {attr.IsOpen! && (<div className="absolute left-1/2 bottom-full mb-2 block bg-black text-sm rounded-lg p-2 shadow-lg border border-[#623a9b] transform -translate-x-1/2 w-70">
+      <textarea rows={3} className="w-64" value={attr.description} onChange={(e) => func("attribute", index, "description", e.target.value)} placeholder="Attribute Description"/>
+    </div>)}
+  </div>)
+  })
+  }
+  </div >
+  );
+}
 //#endregion

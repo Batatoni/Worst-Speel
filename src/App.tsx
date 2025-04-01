@@ -11,8 +11,10 @@ import {
   ProfLevel,
   TabChanger,
   AspectAbilits,
+  AttributeGroup,
 } from "./components/SpecialComponents";
 import {
+  AspectAttribute,
   DmgRedCalculation,
   RankExtract,
   TotalSkillBonus,
@@ -25,7 +27,7 @@ function App() {
   const [AtListVisible, setAtListVisible] = useState(true);
   
   /* Não curti muito esse initialAtr tentar mudar ele depois sei la ele me parece bem bugavel */
-
+//#region Attributes value
   const defaultAttributes: Atributte = {
       name: "",
       Body: 10,
@@ -63,7 +65,7 @@ function App() {
       traces: "",
       ideas: "",
       conections: "",
-      note: ""
+      note: "",
   };
 
   const [atr, setAttributes] = useState<Atributte>(defaultAttributes);
@@ -74,6 +76,35 @@ function App() {
       [name]: value
     }));
   };
+//#endregion
+
+//#region Aspect & Attributes value
+  const DefaulAspectAttribute: AspectAttribute = {
+    aspect: Array(5).fill({name: "", description: ""}),
+    attribute: [{name:"teste", description:"teste description", IsOpen: false}
+
+    ]
+  }
+
+  const [Aatr, setAaAttributes] = useState<AspectAttribute>(DefaulAspectAttribute);
+
+  const AttArrayValue = (type: keyof AspectAttribute, index: number, name: string, value: number | string | boolean) => {
+      
+      setAaAttributes(prevatribute => ({
+        ...prevatribute,
+        [type]: prevatribute[type].map((item, i) =>
+         i === index ? {...item, [name]: value} : item)
+      }))
+    };
+  
+    const AddArray = (attname:string) =>{
+    setAaAttributes(prev => ({
+      ...prev,
+      attribute: [...prev.attribute, {name: attname, description: "", IsOpen: false}]
+    }))
+  }
+
+//#endregion
 
   useEffect(() => {
     const loadData = () => {
@@ -93,6 +124,10 @@ function App() {
   useEffect(() => {
     console.log(atr); // para testes remover depois
   }, [atr])
+
+  useEffect(() => {
+    console.log(Aatr); // para testes remover depois
+  }, [Aatr])
 
   useEffect(() => {
    const saveData = () => {
@@ -446,7 +481,15 @@ function App() {
             </div>
               <h3>Aspect Description</h3>
               <textarea className="w-full mb-4" rows={4} placeholder="Aspect Description"/>
-              <AspectAbilits />   
+              <div>
+                <h2>Attributes</h2> 
+                
+                <button className="bg-purple-600 rounded-lg p-2 mb-6" onClick={() => AddArray("teste 2")}/>
+                
+                <AttributeGroup atr={Aatr.attribute} func={AttArrayValue}/>
+
+              </div>
+              <AspectAbilits atr={Aatr.aspect} func={AttArrayValue}/>   
             <h2 className="mb-2">Flaw</h2>
             <Input type="text" name="Flaw_Name" placeholder="Flaw Name" className="object-left w-46 mb-4 mr-270"/>
             <textarea className="w-full mb-4" rows={4} placeholder="Flaw Description"/>

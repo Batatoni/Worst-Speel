@@ -1,12 +1,13 @@
 import { ProfLevel } from "./SpecialComponents";
 
-export type Aspect =  [
-{name: string, description: string},
-{name: string, description: string},
-{name: string, description: string},
-{name: string, description: string},
-{name: string, description: string}
-]
+export type Aspect = { name: string, description: string}[];
+
+export type GroupAttribute = {name:string, description:string, IsOpen: boolean}[]
+
+export type AspectAttribute = {
+  aspect: Aspect
+  attribute: GroupAttribute
+}
 
 export type Atributte = { // isso aqui ta uma porra eu 100% vou esquecer de atualizar aqui e vai tudo dar errado e eu nao vou saber o porque
   name: string
@@ -45,7 +46,7 @@ export type Atributte = { // isso aqui ta uma porra eu 100% vou esquecer de atua
   traces: string,
   ideas: string,
   conections: string,
-  note: string,
+  note: string
 }
 
 export function MultExtract(target: ProfLevel): number {
