@@ -47,6 +47,7 @@ export type Atributte = { // isso aqui ta uma porra eu 100% vou esquecer de atua
   ideas: string,
   conections: string,
   note: string
+  newatribute: string
 }
 
 export function MultExtract(target: ProfLevel): number {

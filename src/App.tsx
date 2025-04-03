@@ -21,12 +21,14 @@ import {
 } from "./components/Functions";
 import { Atributte } from "./components/Functions";
 import theme from "./components/Theme";
+import { Dialog, DialogBody } from "@material-tailwind/react";
 
 function App() {
   const [visible, setVisible] = useState(false);
   const [AtListVisible, setAtListVisible] = useState(true);
+  const [AtrDialog, setAtrOpen] = useState(false);
+  const handleopendialog = () => setAtrOpen((cur) => !cur)
   
-  /* Não curti muito esse initialAtr tentar mudar ele depois sei la ele me parece bem bugavel */
 //#region Attributes value
   const defaultAttributes: Atributte = {
       name: "",
@@ -66,6 +68,7 @@ function App() {
       ideas: "",
       conections: "",
       note: "",
+      newatribute: "",
   };
 
   const [atr, setAttributes] = useState<Atributte>(defaultAttributes);
@@ -109,12 +112,22 @@ function App() {
   useEffect(() => {
     const loadData = () => {
       const saved = localStorage.getItem("sheet");
+      const savedAA = localStorage.getItem("AAsheet")
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
           setAttributes(parsed);
-        } catch (e) {
+          } catch (e) {
           console.error("Failed to load character data", e);
+        }
+      }
+      if (savedAA) {
+        try{
+        const parsed = JSON.parse(savedAA)
+        setAaAttributes(parsed);
+        }
+        catch (e) {
+          console.error("Failed to load atribute/aspect data", e)
         }
       }
     };
@@ -132,12 +145,14 @@ function App() {
   useEffect(() => {
    const saveData = () => {
       const dataToSave = atr
+      const dataToSave2 = Aatr
       localStorage.setItem("sheet", JSON.stringify(dataToSave));
+      localStorage.setItem("AAsheet", JSON.stringify(dataToSave2))
     };
     
     const timer = setTimeout(saveData, 500);
     return () => clearTimeout(timer);
-  }, [atr])
+  }, [atr, Aatr])
 
   const TotalEndurace = TotalSkillBonus(
     atr.Endurance as ProfLevel,
@@ -321,7 +336,7 @@ function App() {
                 <Input
                   name=""
                   type="text"
-                  className="mb-4"
+                  className="mb-4 w-full"
                   placeholder="Weapon Name"
                 />
                 <Input name="" type="text" placeholder="Weapon Damage" />
@@ -331,7 +346,7 @@ function App() {
                 <Input
                   name=""
                   type="text"
-                  className="mb-4"
+                  className="mb-4 w-full"
                   placeholder="Shield Name"
                 />
                 <Input
@@ -347,7 +362,7 @@ function App() {
                 <Input
                   name=""
                   type="text"
-                  className="mb-4"
+                  className="mb-4 w-full"
                   placeholder="Armor Name"
                 />
                 <Input
@@ -482,10 +497,10 @@ function App() {
               <h3>Aspect Description</h3>
               <textarea className="w-full mb-4" rows={4} placeholder="Aspect Description"/>
               <div>
+                <header className="flex justify-between items-center">
                 <h2>Attributes</h2> 
-                
-                <button className="bg-purple-600 rounded-lg p-2 mb-6" onClick={() => AddArray("teste 2")}/>
-                
+                <button className="bg-purple-600 rounded-lg mt-15 h-12 w-25" onClick={() => handleopendialog()}>New</button>
+                </header>
                 <AttributeGroup atr={Aatr.attribute} func={AttArrayValue}/>
 
               </div>
@@ -505,6 +520,14 @@ function App() {
           )}
         </div>
       </div>
+      <Dialog size="xs" open={AtrDialog} handler={handleopendialog} className="">
+        <DialogBody style={{position: "fixed", left: 1770, top: 600}} className="bg-black text-sm rounded-lg p-2 shadow-lg border-4 border-[#623a9b] w-110">
+          <h2>Adicionar Novo Atributo</h2>
+          <Label value="Name"/>
+          <Input type="text" placeholder="Attribute Name..." name="Atribute new name" onchange={(e) => AttValue("newatribute", e.target.value)}/>
+          <button className="bg-purple-600 text-[15px] text-white mt-4" onClick = {() => {AddArray(atr.newatribute); handleopendialog();}}>Confirm</button>
+        </DialogBody>
+      </Dialog>
     </>
   );
 }
