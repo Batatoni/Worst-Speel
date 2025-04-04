@@ -51,6 +51,12 @@ interface AtrProps {
     Soul: number;
   };
 }
+
+interface AttributeGroup {
+  atr: GroupAttribute;
+  AddAtribute: (type: keyof AspectAttribute, index:number, name:string, value: number | string | boolean) => void;
+  RemoveAtribute: (index: number) => void;
+}
 //#endregion
 
 // Não sei porque raios eu fiz esse inputmainatributte ele nao tem necessidade nenhuma
@@ -407,7 +413,7 @@ const ranks = ["Dormant", "Awakened", "Ascended", "Transcended", "Supreme"];
 //#endregion
 
 //#region AttributeGroup
-export function AttributeGroup({atr, func}: {atr: GroupAttribute, func:(type: keyof AspectAttribute, index: number, name: string, value: number | string | boolean) => void})
+export function AttributeGroup({atr, AddAtribute, RemoveAtribute}: AttributeGroup)
 {
   
   return(
@@ -416,11 +422,10 @@ export function AttributeGroup({atr, func}: {atr: GroupAttribute, func:(type: ke
 
     return(
   <div className="relative group mt-4">
-    <div className="cursor-pointer" onClick={()=> func("attribute", index, "IsOpen", !attr.IsOpen)}>
-    <Chip value={`[${attr.name}]`} onClose={() => func("attribute", index, "IsOpen", !attr.IsOpen)} className="justify-between items-center flex bg-black border-3 border-purple-600 text-bold text-[20p] p-2 mr-4 mb-4"/>
-    </div>
-    {attr.IsOpen! && (<div className="absolute left-1/2 bottom-full mb-2 block bg-black text-[18px] rounded-lg p-2 shadow-lg border border-[#623a9b] transform -translate-x-1/2 w-120">
-      <Textarea rows={5} value={attr.description} onChange={(e) => func("attribute", index, "description", e.target.value)} placeholder="Attribute Description"/>
+    <Chip value={`[${attr.name}]`} onClose={() => RemoveAtribute(index)} className="bg-black w-30 border-3 border-purple-600 text-bold text-[20p] p-2 mr-4 mb-4"/>
+    <div className="absolute top-0 w-23 cursor-pointer h-10" onClick={()=> AddAtribute("attribute", index, "IsOpen", !attr.IsOpen)}/>
+    {attr.IsOpen! && (<div className="absolute left-1/2 bottom-full mb-2 block bg-black text-[18px] text-white rounded-lg p-3 shadow-lg border border-[#623a9b] transform -translate-x-1/2 w-120">
+      <Textarea rows={5} placeholder="Attribute Description" className="mt-2" value={attr.description} onChange={(e) => AddAtribute("attribute", index, "description", e.target.value)}/>
     </div>)}
   </div>)
   })

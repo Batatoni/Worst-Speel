@@ -107,6 +107,16 @@ function App() {
     }))
   }
 
+  const RemoveArray = (indexToRemove:number) =>{
+    setAaAttributes(prev => ({
+      ...prev,
+      attribute: [...prev.attribute.slice(0, indexToRemove),
+        ...prev.attribute.slice(indexToRemove + 1)
+      ]
+    }))
+  }
+
+
 //#endregion
 
   useEffect(() => {
@@ -237,9 +247,8 @@ function App() {
                 AttValue={AttValue}
               />
             </div>
-            <h2 className="text-left justify-between">
+            <h2 onClick={() => setAtListVisible(true)} className="text-left w-fit hover:cursor-pointer">
               Atributos
-              <button  onClick={() => setAtListVisible(true)} />
             </h2>
             <div className="grid grid-cols-3 gap-4">
               <div>
@@ -501,7 +510,7 @@ function App() {
                 <h2>Attributes</h2> 
                 <button className="bg-purple-600 rounded-lg mt-15 h-12 w-25" onClick={() => handleopendialog()}>New</button>
                 </header>
-                <AttributeGroup atr={Aatr.attribute} func={AttArrayValue}/>
+                <AttributeGroup atr={Aatr.attribute} RemoveAtribute={RemoveArray} AddAtribute={AttArrayValue}/>
 
               </div>
               <AspectAbilits atr={Aatr.aspect} func={AttArrayValue}/>   
@@ -521,7 +530,7 @@ function App() {
         </div>
       </div>
       <Dialog size="xs" open={AtrDialog} handler={handleopendialog} className="">
-        <DialogBody style={{position: "fixed", left: 1770, top: 600}} className="bg-black text-sm rounded-lg p-2 shadow-lg border-4 border-[#623a9b] w-110">
+        <DialogBody className="bg-black text-sm rounded-lg p-2 shadow-lg border-4 border-[#623a9b] w-150"> {/*Acho que esse classname era pra estar no Dialog*/}
           <h2>Adicionar Novo Atributo</h2>
           <Label value="Name"/>
           <Input type="text" placeholder="Attribute Name..." name="Atribute new name" onchange={(e) => AttValue("newatribute", e.target.value)}/>
