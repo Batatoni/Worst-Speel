@@ -11,3 +11,9 @@ npm install tailwindcss @tailwindcss/vite
 
 To install Tailwind Materials
 npm i @material-tailwind/react
+
+Important links
+https://tailwindcss.com/docs/width
+https://react.dev/learn/thinking-in-react#step-3-find-the-minimal-but-complete-representation-of-ui-state
+https://vite.dev/guide/static-deploy.html
+https://www.material-tailwind.com/docs/react/installation
