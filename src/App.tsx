@@ -21,7 +21,7 @@ import {
 } from "./components/Functions";
 import { Atributte } from "./components/Functions";
 import theme from "./components/Theme";
-import { Dialog, DialogBody } from "@material-tailwind/react";
+import { Dialog, DialogBody, Switch } from "@material-tailwind/react";
 
 function App() {
   const [visible, setVisible] = useState(false);
@@ -53,13 +53,13 @@ function App() {
       Controlbonus: 0,
       Presence: "None",
       Presencebonus: 0,
-      Cores: 0,
+      Cores: 1,
       Rank: "Sleeper",
       Dice: "1d12",
-      Shield: 0,
+      Shield: "", /* Number */
       ShieldUp: false,
-      Armor: 0,
-      Dmg: 0,
+      Armor: "", /* Number */
+      Dmg: "", /* Number */
       DmgTaken: 0,
       CalcDmgTaken: 0,
       MaxHp: 25,
@@ -193,8 +193,8 @@ function App() {
           <div className="grid grid-cols-3 gap-x-4 gap-y-1">
             <p className="text-left text-xl col-span-2">Name</p>
             <p className="text-left text-xl">Dice</p>
-            <Input name="" type="text" className="col-span-2" value={atr.name} onchange={(e) => AttValue("name", e.target.value)}/>
-            <Input name="" type="text" value={atr.Dice} />
+            <Input name="PlayerName" type="text" className="col-span-2" value={atr.name} onchange={(e) => AttValue("name", e.target.value)}/>
+            <Input name="PlayerDiceCalue" type="text" value={atr.Dice} />
           </div>
           <div id="Tela 1 Character">
             <div className="grid grid-cols-3 gap-x-4 gap-y-1 mt-8">
@@ -218,9 +218,9 @@ function App() {
                 <option value="Sacred">Sacred</option>
                 <option value="Divine">Divine</option>
               </select>
-              <Input name="" type="number" />
+              <Input name="TotalFragments" type="number" />
               <Input
-                name=""
+                name="TotalCores"
                 type="number"
                 className="text-center"
                 value={atr.Cores}
@@ -343,43 +343,45 @@ function App() {
               <div>
                 <Label value="Weapon" />
                 <Input
-                  name=""
+                  name="WeaponName"
                   type="text"
                   className="mb-4 w-full"
                   placeholder="Weapon Name"
                 />
-                <Input name="" type="text" placeholder="Weapon Damage" />
+                <Input name="WeaponDmg" type="text" placeholder="Weapon Damage" />
               </div>
               <div>
                 <Label value="Shield" />
                 <Input
-                  name=""
+                  name="ShieldName"
                   type="text"
                   className="mb-4 w-full"
                   placeholder="Shield Name"
                 />
                 <Input
-                  name=""
+                  name="ShieldResistance"
                   type="number"
+                  className="no-arrows w-full"
                   placeholder="Defence Points"
                   value={atr.Shield}
-                  onchange={(e) => AttValue("Shield", Number(e.target.value))}
+                  onchange={(e) => AttValue("Shield", e.target.value)}
                 />
               </div>
               <div>
                 <Label value="Armor" />
                 <Input
-                  name=""
+                  name="ArmorName"
                   type="text"
                   className="mb-4 w-full"
                   placeholder="Armor Name"
                 />
                 <Input
-                  name=""
+                  name="ArmorResistance"
                   type="number"
+                  className="no-arrows w-full"
                   placeholder="Defence Points"
                   value={atr.Armor}
-                  onchange={(e) => AttValue("Armor", Number(e.target.value))}
+                  onchange={(e) => AttValue("Armor", e.target.value)}
                 />
               </div>
             </div>
@@ -410,7 +412,7 @@ function App() {
                   name="Damage Taken"
                   type="text"
                   value={atr.Dmg}
-                  onchange={(e) => AttValue("Dmg", Number(e.target.value))}
+                  onchange={(e) => AttValue("Dmg", e.target.value)}
                 />
               </div>
             </div>
@@ -422,10 +424,10 @@ function App() {
                     onClick={() => {
                       const newHp = DmgRedCalculation(
                         atr.Hp,
-                        atr.Dmg,
-                        atr.Armor,
+                        atr.Dmg as number,
+                        atr.Armor as number,
                         AttValue,
-                        atr.ShieldUp ? atr.Shield : 0
+                        atr.ShieldUp ? atr.Shield as number : 0
                       );
                       AttValue("Hp", newHp);
                       setVisible(true);
@@ -446,14 +448,14 @@ function App() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center mb-2 ml-4">
-                  <input
-                    name="Armor"
-                    type="checkbox"
-                    className="object-left size-7 mt-2 bg-purple-600"
-                    onChange={(e) => AttValue("ShieldUp", e.target.checked)}
+                <div className="flex items-center justify-between">
+                  <Switch style={{}}
+                    label="Shield Up"
+                    className="h-full w-full text-purple-600 checked:bg-purple-600"
+                    labelProps={{className: "ml-8 mt-2 text-xl text-[#f3d3ffde]"}}
+                    circleProps={{className: "ml-[20px] mt-[3px]"}}
+                    onChange={() => AttValue("ShieldUp", !atr.ShieldUp)}
                   />
-                  <Label value="Shield Up" className="mb-2 ml-2" />
                 </div>
               </div>
             </div>

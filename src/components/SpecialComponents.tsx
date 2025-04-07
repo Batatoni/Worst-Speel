@@ -109,7 +109,7 @@ export function SkillSelect({
         <Input
           type="number"
           name={label}
-          className="col-span-1 no-arrows"
+          className="col-span-1 no-arrows text-center"
           value={pericBonus}
           onchange={(e) => AttValue(`${label}bonus` as keyof Atributte, e.target.value)}
         />
